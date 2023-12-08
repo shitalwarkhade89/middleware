@@ -31,6 +31,30 @@ const checkApi=(req,res,next) => {
 
     )}
 
+    const checkValidations =(req,res,next) => {
+        const {name,age,address} =req.body;
+
+        if(!name){
+            res.json({
+                success:true,
+                message:"Name is missing"
+            })
+        }
+        if(!age){
+            res.json({
+                success:true,
+                message:"Age is missing"
+            })
+        }
+        if(!address){
+            res.json({
+                success:true,
+                message:"Address is missing"
+            })
+        }
+        next();
+    }
+
 // health api
 
 app.get('/api/v1/healts',(req,res) => {
@@ -42,7 +66,7 @@ app.get('/api/v1/healts',(req,res) => {
 
 // post api
 
-app.post('/api/v1/students',checkApi,(req,res) => {
+app.post('/api/v1/students',checkApi,checkValidations,(req,res) => {
   res.json({
     success:true,
     data:[],
@@ -51,7 +75,14 @@ app.post('/api/v1/students',checkApi,(req,res) => {
 });
 
 
-// 
+// get api
+
+app.get('/api/v1/students',checkApi, (req,res) => {
+    res.json({
+        success:true,
+        message:"Students featch successfully" 
+    })
+})
 
 const PORT =process.env.PORT ||8080;
 app.listen(PORT,()=>{
