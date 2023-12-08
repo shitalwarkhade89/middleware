@@ -6,12 +6,20 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
+
 const connectDB = async () =>{
 const conn = await mongoose.connect(process.env.MONGODB_URI);
 if (conn){
     console.log("Mongodb connected successfully");
 
 }}
+let counter=0;
+const apiCallCounters =(req,res,next) =>{
+    counter ++;
+    console.log(`API calls : ${counter}`)
+    next();
+}
+app.use(apiCallCounters);
 // checkApi middleware
 
 const checkApi=(req,res,next) => {
@@ -54,6 +62,7 @@ const checkApi=(req,res,next) => {
         }
         next();
     }
+   
 
 // health api
 
@@ -83,6 +92,8 @@ app.get('/api/v1/students',checkApi, (req,res) => {
         message:"Students featch successfully" 
     })
 })
+
+
 
 const PORT =process.env.PORT ||8080;
 app.listen(PORT,()=>{
